@@ -14,12 +14,18 @@ class Card:
     def __repr__(self):
         return f'{type(self)}: {self.__str__()}'
 
-class Deck(list):
+class Deck:
     def __init__(self):
         self.cards = [Card(rank, suit) for rank in Card.RANKS for suit in Card.SUITS]
 
     def shuffle(self):
         random.shuffle(self.cards)
+
+    def deal(self):
+        return self.cards.pop()
+
+    def __len__(self):
+        return len(self.cards)
 
     def __str__(self):
         return str(list(map(lambda card: str(card), self.cards)))

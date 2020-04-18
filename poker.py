@@ -95,38 +95,52 @@ class Game:
     def deal_community(self):
         self.community_cards.append(self.deck.deal())
 
-    @classmethod
-    def simulate(cls, players):
-        game = cls(players)
+class Dealer:
+    def __init__(self, players):
+        self.players = players
+        self.game = Game(self.players)
 
-        print('Let’s play poker!')
+    def deal(self):
+        # Dealing is over if we’ve reached the river
+        if self.game.stage == 'river':
+            self.game = Game(self.players)
 
-        # Deal hole cards
-        game.deal()
+        stage = self.game.deal()
+
+        if stage == 'flop':
+            self.display_the_flop()
+        elif stage == 'turn':
+            self.display_the_turn()
+        elif stage == 'river':
+            self.display_the_river()
+        else:
+            self.display_hands()
+
+    def display_hands(self):
+        print('NEW GAME')
         print()
-        print('Dealing player hands ...')
-        for player in game.players:
+        print('Player Hands')
+        for player in self.game.players:
             print()
             print(player.name)
-            print(Card.join(game.hands[player]))
+            print(Card.join(self.game.hands[player]))
 
-        # Deal the flop
-        game.deal()
+    def display_the_flop(self):
         print()
         print('The Flop')
-        print(Card.join(game.community_cards))
+        print(Card.join(self.game.community_cards))
 
-        # Deal the turn
-        game.deal()
+    def display_the_turn(self):
         print()
         print('The Turn')
-        print(Card.join(game.community_cards))
+        print(Card.join(self.game.community_cards))
 
-        # Deal the river
-        game.deal()
+    def display_the_river(self):
         print()
         print('The River')
-        print(Card.join(game.community_cards))
+        print(Card.join(self.game.community_cards))
 
-        print()
-        print('Who won?!')
+    def simulate(self):
+        # Play all 4 stages of a game
+        for i in range(4):
+            self.deal()

@@ -3,28 +3,7 @@ from slack import WebClient
 
 from poker import *
 
-class PokerDealer:
-    def __init__(self, players):
-        self.players = players
-        self.game = Game(self.players)
-
-    def deal(self):
-        # Dealing is over if we’ve reached the river
-        if self.game.stage == 'river':
-            self.game = Game(self.players)
-
-        stage = self.game.deal()
-
-        if stage == 'flop':
-            self.display_the_flop()
-        elif stage == 'turn':
-            self.display_the_turn()
-        elif stage == 'river':
-            self.display_the_river()
-        else:
-            self.display_hands()
-
-class SlackDealer(PokerDealer):
+class SlackDealer(Dealer):
     SLACK_SUITS = {
         '♣': ':clubs:',
         '♦': ':diamonds:',

@@ -1,5 +1,9 @@
 import random
 
+class Player:
+    def __init__(self, name):
+        self.name = name
+
 class Card:
     SUITS = ['♣', '♦', '♥', '♠']
     RANKS = ['2','3','4','5','6','7','8','9','10','J','Q','K','A']
@@ -39,26 +43,46 @@ class Deck:
         return f'{type(self)}: {self.__str__()}'
 
 class Game:
-    def __init__(self, player_count):
-        # TODO: Validate player_count
-        self.player_count = player_count
+    def __init__(self, players):
+        # TODO: Validate players list
+        self.players = []
+        for player in players:
+            self.players.append(Player(name=player))
+
         self.hands = {}
         self.community_cards = []
         self.deck = Deck()
         self.deck.shuffle()
 
-    def deal(self):
+    @property
+    def stage(self):
         if not self.hands:
-            self.deal_hands()
+            return 'start'
         elif not self.community_cards:
+            return 'hands'
+        elif len(self.community_cards) == 3:
+            return 'flop'
+        elif len(self.community_cards) == 4:
+            return 'turn'
+        else:
+            return 'river'
+
+    def deal(self):
+        stage = self.stage
+
+        if stage == 'start':
+            self.deal_hands()
+        elif stage == 'hands':
             self.deal_flop()
-        elif len(self.community_cards) < 5:
+        elif stage in ['flop', 'turn']:
             self.deal_community()
         else:
-            raise Exception("Game over, all cards have been dealt.")
+            raise Exception("Game over, all cards have been dealt. Start a new game.")
+
+        return self.stage
 
     def deal_hands(self):
-        for player in range(self.player_count):
+        for player in self.players:
             self.hands[player] = []
             # Deal two "hole" cards
             for i in range(2):
@@ -72,8 +96,8 @@ class Game:
         self.community_cards.append(self.deck.deal())
 
     @classmethod
-    def simulate(cls, player_count):
-        game = cls(player_count)
+    def simulate(cls, players):
+        game = cls(players)
 
         print('Let’s play poker!')
 
@@ -81,28 +105,28 @@ class Game:
         game.deal()
         print()
         print('Dealing player hands ...')
-        for player in range(player_count):
-            print(f'Player {player + 1}: {Card.join(game.hands[player])}')
+        for player in game.players:
+            print()
+            print(player.name)
+            print(Card.join(game.hands[player]))
 
         # Deal the flop
         game.deal()
         print()
-        print('Dealing the flop ...')
-        print(f'Community cards: {Card.join(game.community_cards)}')
+        print('The Flop')
+        print(Card.join(game.community_cards))
 
         # Deal the turn
         game.deal()
         print()
-        print('Dealing the turn ...')
-        print(game.community_cards[-1])
-        print(f'Community cards: {Card.join(game.community_cards)}')
+        print('The Turn')
+        print(Card.join(game.community_cards))
 
         # Deal the river
         game.deal()
         print()
-        print('Dealing the river ...')
-        print(game.community_cards[-1])
-        print(f'Community cards: {Card.join(game.community_cards)}')
+        print('The River')
+        print(Card.join(game.community_cards))
 
         print()
         print('Who won?!')

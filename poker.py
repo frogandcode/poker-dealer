@@ -45,10 +45,7 @@ class Deck:
 class Game:
     def __init__(self, players):
         # TODO: Validate players list
-        self.players = []
-        for player in players:
-            self.players.append(Player(name=player))
-
+        self.players = players
         self.hands = {}
         self.community_cards = []
         self.deck = Deck()
@@ -97,7 +94,10 @@ class Game:
 
 class Dealer:
     def __init__(self, players):
-        self.players = players
+        # TODO: Validate players list
+        self.players = []
+        for player in players:
+            self.players.append(Player(name=player))
         self.game = Game(self.players)
 
     def deal(self):

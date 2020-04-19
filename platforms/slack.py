@@ -30,22 +30,26 @@ class Dealer(poker.Dealer):
         self.client.chat_postMessage(channel='house', text=message)
 
     def display_hands(self):
-        self.post('*NEW GAME*')
-        self.post('---------- Player hands ----------')
+        message = '*NEW GAME*\n---------- Player hands ----------'
         for player in self.game.players:
-            self.post(f'{player.name}\n{self.display_cards(self.game.hands[player])}')
+            message += f'\n{player.name}\n{self.display_cards(self.game.hands[player])}'
+
+        self.post(message)
 
     def display_the_flop(self):
-        self.post('---------- The Flop ----------')
-        self.post(self.display_cards(self.game.community_cards))
+        self.display_community_cards('Flop')
 
     def display_the_turn(self):
-        self.post('---------- The Turn ----------')
-        self.post(self.display_cards(self.game.community_cards))
+        self.display_community_cards('Turn')
 
     def display_the_river(self):
-        self.post('---------- The River ----------')
-        self.post(self.display_cards(self.game.community_cards))
+        self.display_community_cards('River')
+
+    def display_community_cards(self, name):
+        message = f'---------- The {name} ----------\n'
+        message += self.display_cards(self.game.community_cards)
+
+        self.post(message)
 
     def simulate(self):
         # Play all 4 stages of a game

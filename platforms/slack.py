@@ -26,18 +26,22 @@ class Dealer(poker.Dealer):
     def display_cards(self, cards):
         return '    '.join(list(map(lambda card: self.display_card(card), cards)))
 
-    def post(self, message):
-        self.client.chat_postMessage(channel='house', text=message)
+    def post(self, player, message):
+        self.client.chat_postMessage(channel=player.id, text=message)
 
     def display_hands(self):
-        message = '*NEW GAME*\n---------- Player hands ----------'
         for player in self.game.players:
-            message += f'\n{player.name}\n{self.display_cards(self.game.hands[player])}'
+            message = '*NEW GAME*\n---------- Your Hand ----------'
+            message += f'\n{self.display_cards(self.game.hands[player])}'
 
-        self.post(message)
+            self.post(player=player, message=message)
 
     def display_the_flop(self):
-        self.display_community_cards('Flop')
+        for player in self.game.players:
+            message = f'---------- The Flop ----------\n'
+            message += self.display_cards(self.game.community_cards)
+
+            self.post(player=player, message=message)
 
     def display_the_turn(self):
         self.display_community_cards('Turn')
@@ -45,11 +49,13 @@ class Dealer(poker.Dealer):
     def display_the_river(self):
         self.display_community_cards('River')
 
-    def display_community_cards(self, name):
-        message = f'---------- The {name} ----------\n'
-        message += self.display_cards(self.game.community_cards)
+    def display_community_cards(self, stage):
+        for player in self.game.players:
+            message = f'---------- The {stage} ----------\n'
+            message += f'{self.display_cards(self.game.community_cards)}    (community)\n\n\n'
+            message += f'{self.display_cards(self.game.hands[player])}    (you)'
 
-        self.post(message)
+            self.post(player=player, message=message)
 
     def simulate(self):
         # Play all 4 stages of a game

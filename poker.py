@@ -1,7 +1,8 @@
 import random
 
 class Player:
-    def __init__(self, name):
+    def __init__(self, id, name):
+        self.id = id
         self.name = name
 
 class Card:
@@ -97,7 +98,7 @@ class Dealer:
         # TODO: Validate players list
         self.players = []
         for player in players:
-            self.players.append(Player(name=player))
+            self.players.append(Player(id=player['id'], name=player['name']))
         self.game = Game(self.players)
 
     def deal(self):
@@ -115,6 +116,10 @@ class Dealer:
             self.display_the_river()
         else:
             self.display_hands()
+
+    #
+    # The following methods must be implemented by subclases per platform.
+    #
 
     def display_hands(self):
         print('NEW GAME')

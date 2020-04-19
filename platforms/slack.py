@@ -1,9 +1,9 @@
 import os
 from slack import WebClient
 
-from poker import *
+import poker
 
-class SlackDealer(Dealer):
+class Dealer(poker.Dealer):
     SLACK_SUITS = {
         '♣': ':clubs:',
         '♦': ':diamonds:',

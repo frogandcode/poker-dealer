@@ -57,6 +57,14 @@ class Dealer(poker.Dealer):
 
             self.post(player=player, message=message)
 
+    def display_revealed_hands(self, players):
+        message = '---------- Hands Revealed ----------'
+        for player in players:
+            message += f'\n{self.display_cards(self.game.hands[player])}    ({player.name})\n'
+
+        for player in self.game.players:
+            self.post(player=player, message=message)
+
     def simulate(self):
         # Play all 4 stages of a game
         for i in range(4):

@@ -117,6 +117,17 @@ class Dealer:
         else:
             self.display_hands()
 
+    def reveal_hands(self, comma_delimited_player_names):
+        if not self.game.hands:
+            print('No hands have been dealt yet.')
+            return
+
+        names = comma_delimited_player_names.split(',')
+        players = list(filter(lambda player: player.name in names, self.players))
+
+        if players:
+            self.display_revealed_hands(players)
+
     #
     # The following methods must be implemented by subclases per platform.
     #

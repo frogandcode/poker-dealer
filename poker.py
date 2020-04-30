@@ -75,7 +75,7 @@ class Game:
         elif stage in ['flop', 'turn']:
             self.deal_community()
         else:
-            raise Exception("Game over, all cards have been dealt. Start a new game.")
+            raise ValueError("Game over, all cards have been dealt. Start a new game.")
 
         return self.stage
 

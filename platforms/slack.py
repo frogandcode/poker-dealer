@@ -16,7 +16,7 @@ class Dealer(poker.Dealer):
 
         token = os.environ.get('SLACK_API_TOKEN')
         if not token:
-            print('Please set the environment variable: SLACK_API_TOKEN')
+            raise ValueError("Please set the environment variable: SLACK_API_TOKEN")
 
         self.client = WebClient(token)
 
